@@ -1,5 +1,9 @@
 from django.shortcuts import render
 
+from home.decorators import login_required_custom
+
+
+@login_required_custom
 def index(request):
     """
     Vue d'accueil qui affiche la page index.html.
