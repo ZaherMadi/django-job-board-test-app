@@ -35,7 +35,7 @@
     {% endif %}
 
     <!-- Form -->
-    <form method="post" class="space-y-4">
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
         {% csrf_token %}
 
         <!-- Type utilisateur Field -->
@@ -131,7 +131,7 @@
         <!-- Image Field -->
         <div>
             <label for="id_image" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Image (URL)
+                Image (Upload)
             </label>
             {{ form.image }}
             {% if form.image.errors %}

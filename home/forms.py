@@ -54,12 +54,10 @@ class RegisterForm(UserCreationForm):
             'placeholder': 'Adresse'
         })
     )
-    image = forms.CharField(
-        max_length=255,
+    image = forms.ImageField(
         required=False,
-        widget=forms.TextInput(attrs={
+        widget=forms.FileInput(attrs={
             'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary',
-            'placeholder': 'URL de l\'image (optionnel)'
         })
     )
     siret = forms.CharField(
@@ -120,7 +118,7 @@ class RegisterForm(UserCreationForm):
                 user=user,
                 user_type=self.cleaned_data['user_type'],
                 address=self.cleaned_data['address'],
-                image=self.cleaned_data.get('image', ''),
+                image=self.cleaned_data.get('image'),
                 siret=self.cleaned_data.get('siret', ''),
             )
         return user
@@ -166,15 +164,18 @@ class ProfileUpdateForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={'class': _input_classes})
     )
-    image = forms.CharField(
-        max_length=255,
+    image = forms.ImageField(
         required=False,
-        widget=forms.TextInput(attrs={'class': _input_classes})
+        widget=forms.FileInput(attrs={'class': _input_classes})
     )
     siret = forms.CharField(
         max_length=14,
         required=False,
         widget=forms.TextInput(attrs={'class': _input_classes})
+    )
+    cv = forms.FileField(
+        required=False,
+        widget=forms.FileInput(attrs={'class': _input_classes})
     )
 
     def __init__(self, *args, **kwargs):
@@ -186,7 +187,6 @@ class ProfileUpdateForm(forms.Form):
                 'first_name': self.user.first_name,
                 'last_name': self.user.last_name,
                 'address': self.profile.address,
-                'image': self.profile.image,
                 'siret': self.profile.siret,
             })
 
@@ -212,7 +212,15 @@ class ProfileUpdateForm(forms.Form):
         self.user.save()
 
         self.profile.address = self.cleaned_data['address']
-        self.profile.image = self.cleaned_data.get('image', '')
+
+        # Sauvegarder l'image si uploadée
+        if self.cleaned_data.get('image'):
+            self.profile.image = self.cleaned_data['image']
+
+        # Sauvegarder le CV si uploadé (postulants uniquement)
+        if self.cleaned_data.get('cv') and self.profile.user_type == Profile.USER_TYPE_APPLICANT:
+            self.profile.cv = self.cleaned_data['cv']
+
         self.profile.siret = self.cleaned_data.get('siret', '')
         self.profile.save()
         return self.profile
