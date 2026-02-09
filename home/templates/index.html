@@ -3,72 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Workaholic Place - Find Your Dream Job</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap"
-          rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#0ea5e9",
-                        "background-light": "#f8fafc",
-                        "background-dark": "#0f172a",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                        display: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem",
-                    },
-                },
-            },
-        };
-
-        function toggleMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .font-display {
-            font-family: 'Playfair Display', serif;
-        }
-    </style>
+    {% include "partials/head.html" with head_variant="public" %}
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
-<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <div class="flex items-center space-x-4 cursor-pointer" onclick="logout()">
-            <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                <span class="text-white font-bold text-2xl">W</span>
-            </div>
-            <h1 class="text-2xl font-display text-slate-900 dark:text-white">Workaholic Place</h1>
-        </div>
-        <div class="flex items-center space-x-6">
-            <button class="p-2 text-slate-500 hover:text-primary transition-colors" onclick="toggleMode()">
-                <span class="material-icons dark:hidden">dark_mode</span>
-                <span class="material-icons hidden dark:block text-yellow-400">light_mode</span>
-            </button>
-            <div class="flex items-center space-x-4" id="authButtons">
-                <a class="px-5 py-2.5 font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
-                        href="/login">Sign in
-                </a>
-                <a class="bg-primary hover:bg-sky-600 text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg"
-                        href="/register">Get Started
-                </a>
-            </div>
-        </div>
-    </div>
-</header>
+{% include "partials/header.html" with header_variant="public" %}
 <main class="flex-grow flex flex-col items-center justify-center p-6">
     <div class="max-w-4xl w-full text-center space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000"
          id="landingView">
@@ -99,17 +37,6 @@
         </div>
     </div>
 </main>
-<footer class="py-12 border-t border-slate-200 dark:border-slate-800 mt-auto">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            Workaholic place - 2026 - All Rights Reserved
-        </p>
-        <div class="mt-4 flex justify-center space-x-6 text-slate-400">
-            <a class="hover:text-primary transition-colors" href="#">Privacy</a>
-            <a class="hover:text-primary transition-colors" href="#">Terms</a>
-            <a class="hover:text-primary transition-colors" href="#">Contact</a>
-        </div>
-    </div>
-</footer>
+{% include "partials/footer.html" %}
 </body>
 </html>

@@ -9,8 +9,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ProfileUpdateForm
 from .decorators import logout_required
+from .models import Profile
 
 
 def index(request):
@@ -86,6 +87,37 @@ def login_view(request):
 
 
 @login_required(login_url='home:login')
+def profile(request):
+    """
+    Vue du profil utilisateur.
+
+    Affiche et met à jour les informations du compte connecté.
+    """
+    profile, _ = Profile.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'user_type': Profile.USER_TYPE_APPLICANT,
+            'address': '',
+        }
+    )
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, user=request.user, profile=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Votre profil a été mis à jour.')
+            return redirect('home:profile')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
+    else:
+        form = ProfileUpdateForm(user=request.user, profile=profile)
+
+    return render(request, 'home/profile.html', {'form': form, 'profile': profile})
+
+
+@login_required(login_url='home:login')
 def logout_view(request):
     """
     Vue pour la déconnexion d'un utilisateur.
@@ -95,5 +127,3 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'Vous avez été déconnecté avec succès.')
     return redirect('home:index')
-
-

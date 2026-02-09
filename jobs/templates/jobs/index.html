@@ -3,101 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Workaholic Place - Find Your Dream Job</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap"
-          rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#0ea5e9",
-                        "background-light": "#f8fafc",
-                        "background-dark": "#0f172a",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                        display: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem",
-                    },
-                },
-            },
-        };
-
-        function toggleMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        function toggleProfile() {
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .font-display {
-            font-family: 'Playfair Display', serif;
-        }
-    </style>
+    {% include "partials/head.html" with head_variant="auth" %}
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
-<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <div class="flex items-center space-x-4 cursor-pointer" onclick="logout()">
-            <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                <span class="text-white font-bold text-2xl">W</span>
-            </div>
-            <h1 class="text-2xl font-display text-slate-900 dark:text-white">Workaholic Place</h1>
-        </div>
-        <div class="flex items-center space-x-6">
-            <button class="p-2 text-slate-500 hover:text-primary transition-colors" onclick="toggleMode()">
-                <span class="material-icons dark:hidden">dark_mode</span>
-                <span class="material-icons hidden dark:block text-yellow-400">light_mode</span>
-            </button>
-            <div class="flex items-center space-x-4 relative" id="navActions">
-                <button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors relative">
-                    <span class="material-icons">notifications</span>
-                    <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 border-2 border-white dark:border-background-dark rounded-full"></span>
-                </button>
-                <div class="relative">
-                    <button class="flex items-center space-x-2 p-1 pl-3 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 hover:border-primary transition-all"
-                            onclick="toggleProfile()">
-                        <span class="text-sm font-medium pr-1">
-                            {% if request.user.is_authenticated %}
-                                {{ request.user.first_name }} {{ request.user.last_name }}
-                            {% else %}
-                                Guest User
-                            {% endif %}
-                        </span>
-                        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center overflow-hidden">
-                            <span class="material-icons text-white text-xl">person</span>
-                        </div>
-                    </button>
-                    <div class="hidden absolute right-0 mt-3 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl py-2 z-50"
-                         id="profileDropdown">
-                        <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
-                            <p class="text-sm font-semibold">Profile</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Your settings and information</p>
-                        </div>
-                        <a href="{% url 'home:logout' %}" class="block w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                            <p class="text-sm font-semibold text-red-500">Logout</p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Disconnect from this website</p>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
+{% include "partials/header.html" with header_variant="auth" %}
 <main class="flex-grow flex flex-col items-center justify-center p-6">
     <div class="w-full max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700"
          id="feedView">
@@ -170,18 +79,7 @@
         </div>
     </div>
 </main>
-<footer class="py-12 border-t border-slate-200 dark:border-slate-800 mt-auto">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            Workaholic place - 2026 - All Rights Reserved
-        </p>
-        <div class="mt-4 flex justify-center space-x-6 text-slate-400">
-            <a class="hover:text-primary transition-colors" href="#">Privacy</a>
-            <a class="hover:text-primary transition-colors" href="#">Terms</a>
-            <a class="hover:text-primary transition-colors" href="#">Contact</a>
-        </div>
-    </div>
-</footer>
+{% include "partials/footer.html" %}
 <script>
     // Close dropdown when clicking outside
     window.onclick = function (event) {
@@ -196,3 +94,4 @@
 
 </body>
 </html>
+

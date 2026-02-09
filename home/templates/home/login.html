@@ -3,55 +3,11 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Workaholic Place - Find Your Dream Job</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap"
-          rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#0ea5e9",
-                        "background-light": "#f8fafc",
-                        "background-dark": "#0f172a",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                        display: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem",
-                    },
-                },
-            },
-        };
-
-        function toggleMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        function toggleProfile() {
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .font-display {
-            font-family: 'Playfair Display', serif;
-        }
-    </style>
+    {% include "partials/head.html" with head_variant="public" %}
 </head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center">
-
-<div class="w-full max-w-md">
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+{% include "partials/header.html" with header_variant="public" %}
+<main class="flex-grow flex flex-col items-center justify-center p-6">
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8">
         <!-- Header -->
         <div class="text-center mb-8">
@@ -129,7 +85,7 @@
             </p>
         </div>
     </div>
-</div>
+</main>
 
 </body>
 </html>
