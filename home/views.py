@@ -33,7 +33,7 @@ def register(request):
     Les utilisateurs déjà connectés sont redirigés vers le board.
     """
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             # Créer le nouvel utilisateur
             user = form.save()
@@ -102,7 +102,7 @@ def profile(request):
     )
 
     if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, user=request.user, profile=profile)
+        form = ProfileUpdateForm(request.POST, request.FILES, user=request.user, profile=profile)
         if form.is_valid():
             form.save()
             messages.success(request, 'Votre profil a été mis à jour.')
