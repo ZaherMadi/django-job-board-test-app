@@ -3,196 +3,210 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Workaholic Place - Find Your Dream Job</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap"
-          rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#0ea5e9",
-                        "background-light": "#f8fafc",
-                        "background-dark": "#0f172a",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                        display: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem",
-                    },
-                },
-            },
-        };
-
-        function toggleMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        function toggleProfile() {
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .font-display {
-            font-family: 'Playfair Display', serif;
-        }
-    </style>
+    {% include "partials/head.html" with head_variant="public" %}
 </head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center py-12">
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+{% include "partials/header.html" with header_variant="public" %}
+<main class="flex-grow flex flex-col items-center justify-center p-6">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-primary mb-2">Créer un compte</h1>
+        <p class="text-slate-600 dark:text-slate-400">Rejoignez Workaholic Place</p>
+    </div>
 
-<div class="w-full max-w-md">
-    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-primary mb-2">Créer un compte</h1>
-            <p class="text-slate-600 dark:text-slate-400">Rejoignez Workaholic Place</p>
+    <!-- Messages -->
+    {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+                <div class="rounded-lg p-4 mb-4
+                    {% if message.tags %}
+                        {% if 'error' in message.tags %}
+                            bg-red-100 border border-red-400 text-red-700
+                        {% elif 'success' in message.tags %}
+                            bg-green-100 border border-green-400 text-green-700
+                        {% else %}
+                            bg-blue-100 border border-blue-400 text-blue-700
+                        {% endif %}
+                    {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Form -->
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <!-- Type utilisateur Field -->
+        <div>
+            <label for="id_user_type" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Type de compte
+            </label>
+            {{ form.user_type }}
+            {% if form.user_type.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.user_type.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
 
-        <!-- Messages -->
-        {% if messages %}
-            <div class="mb-6">
-                {% for message in messages %}
-                    <div class="rounded-lg p-4 mb-4
-                        {% if message.tags %}
-                            {% if 'error' in message.tags %}
-                                bg-red-100 border border-red-400 text-red-700
-                            {% elif 'success' in message.tags %}
-                                bg-green-100 border border-green-400 text-green-700
-                            {% else %}
-                                bg-blue-100 border border-blue-400 text-blue-700
-                            {% endif %}
-                        {% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+        <!-- Prénom Field -->
+        <div>
+            <label for="id_first_name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Prénom (postulant)
+            </label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.first_name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-        <!-- Form -->
-        <form method="post" class="space-y-4">
-            {% csrf_token %}
+        <!-- Nom Field -->
+        <div>
+            <label for="id_last_name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Nom
+            </label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.last_name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-            <!-- Prénom Field -->
-            <div>
-                <label for="id_first_name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Prénom
-                </label>
-                {{ form.first_name }}
-                {% if form.first_name.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.first_name.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+        <!-- Username Field -->
+        <div>
+            <label for="id_username" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Nom d'utilisateur
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.username.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-            <!-- Nom Field -->
-            <div>
-                <label for="id_last_name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Nom
-                </label>
-                {{ form.last_name }}
-                {% if form.last_name.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.last_name.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+        <!-- Email Field -->
+        <div>
+            <label for="id_email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Email
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.email.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-            <!-- Username Field -->
-            <div>
-                <label for="id_username" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Nom d'utilisateur
-                </label>
-                {{ form.username }}
-                {% if form.username.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.username.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+        <!-- Adresse Field -->
+        <div>
+            <label for="id_address" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Adresse
+            </label>
+            {{ form.address }}
+            {% if form.address.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.address.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-            <!-- Email Field -->
-            <div>
-                <label for="id_email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Email
-                </label>
-                {{ form.email }}
-                {% if form.email.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.email.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+        <!-- Image Field -->
+        <div>
+            <label for="id_image" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Image (URL)
+            </label>
+            {{ form.image }}
+            {% if form.image.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.image.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-            <!-- Password Field -->
-            <div>
-                <label for="id_password1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Mot de passe
-                </label>
-                {{ form.password1 }}
-                {% if form.password1.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.password1.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Votre mot de passe doit contenir au moins 8 caractères.
-                </p>
-            </div>
+        <!-- SIRET Field -->
+        <div>
+            <label for="id_siret" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                SIRET (entreprise)
+            </label>
+            {{ form.siret }}
+            {% if form.siret.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.siret.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 
-            <!-- Password Confirmation Field -->
-            <div>
-                <label for="id_password2" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Confirmer le mot de passe
-                </label>
-                {{ form.password2 }}
-                {% if form.password2.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.password2.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="w-full bg-primary bg-sky-600 text-white font-semibold py-2 rounded-lg transition duration-200 mt-6">
-                Créer mon compte
-            </button>
-        </form>
-
-        <!-- Footer -->
-        <div class="text-center mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-            <p class="text-slate-600 dark:text-slate-400 text-sm">
-                Vous avez déjà un compte?
-                <a href="{% url 'home:login' %}" class="text-primary text-sky-600 font-semibold">
-                    Se connecter
-                </a>
+        <!-- Password Field -->
+        <div>
+            <label for="id_password1" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Mot de passe
+            </label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.password1.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Votre mot de passe doit contenir au moins 8 caractères.
             </p>
         </div>
+
+        <!-- Password Confirmation Field -->
+        <div>
+            <label for="id_password2" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Confirmer le mot de passe
+            </label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="text-red-600 text-sm mt-1">
+                    {% for error in form.password2.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-primary bg-sky-600 text-white font-semibold py-2 rounded-lg transition duration-200 mt-6">
+            Créer mon compte
+        </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="text-center mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+        <p class="text-slate-600 dark:text-slate-400 text-sm">
+            Vous avez déjà un compte?
+            <a href="{% url 'home:login' %}" class="text-primary text-sky-600 font-semibold">
+                Se connecter
+            </a>
+        </p>
     </div>
-</div>
+</main>
 
 </body>
 </html>

@@ -1,0 +1,64 @@
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="flex items-center space-x-4 cursor-pointer" onclick="logout()">
+            <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <span class="text-white font-bold text-2xl">W</span>
+            </div>
+            <a class="text-2xl font-display text-slate-900 dark:text-white" href="{% if request.user.is_authenticated %}{% url 'jobs:index' %}{% else %}{% url 'home:index' %}{% endif %}">
+                Workaholic Place
+            </a>
+        </div>
+        <div class="flex items-center space-x-6">
+            {% if header_variant == 'public' %}
+                <div class="flex items-center space-x-4" id="authButtons">
+                    <a class="px-5 py-2.5 font-medium text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
+                       href="{% url 'home:login' %}">
+                        Sign in
+                    </a>
+                    <a class="bg-primary hover:bg-sky-600 text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg"
+                       href="{% url 'home:register' %}">
+                        Get Started
+                    </a>
+                </div>
+            {% else %}
+                <button class="p-2 text-slate-500 hover:text-primary transition-colors" onclick="toggleMode()">
+                    <span class="material-icons dark:hidden">dark_mode</span>
+                    <span class="material-icons hidden dark:block text-yellow-400">light_mode</span>
+                </button>
+                <div class="flex items-center space-x-4 relative" id="navActions">
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 p-1 pl-3 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 hover:border-primary transition-all"
+                                onclick="toggleProfile()">
+                        <span class="text-sm font-medium pr-1">
+                            {% if request.user.is_authenticated %}
+                                {{ request.user.first_name }} {{ request.user.last_name }}
+                            {% else %}
+                                Guest User
+                            {% endif %}
+                        </span>
+                            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center overflow-hidden">
+                                <span class="material-icons text-white text-xl">person</span>
+                            </div>
+                        </button>
+                        <div class="hidden absolute right-0 mt-3 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl py-2 z-50"
+                             id="profileDropdown">
+                            <a href="{% url 'home:profile' %}" class="block w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                <p class="text-sm font-semibold">Profile</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">View and edit your profile</p>
+                                {% if request.user.is_authenticated and request.user.profile %}
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                        Type: {{ request.user.profile.get_user_type_display }}
+                                    </p>
+                                {% endif %}
+                            </a>
+                            <a href="{% url 'home:logout' %}" class="block w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                <p class="text-sm font-semibold text-red-500">Logout</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Disconnect from this website</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
