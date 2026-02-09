@@ -71,7 +71,13 @@
                 <div class="relative">
                     <button class="flex items-center space-x-2 p-1 pl-3 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 hover:border-primary transition-all"
                             onclick="toggleProfile()">
-                        <span class="text-sm font-medium pr-1">Alex Rivier</span>
+                        <span class="text-sm font-medium pr-1">
+                            {% if request.user.is_authenticated %}
+                                {{ request.user.first_name }} {{ request.user.last_name }}
+                            {% else %}
+                                Guest User
+                            {% endif %}
+                        </span>
                         <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center overflow-hidden">
                             <span class="material-icons text-white text-xl">person</span>
                         </div>
@@ -82,11 +88,10 @@
                             <p class="text-sm font-semibold">Profile</p>
                             <p class="text-xs text-slate-500 dark:text-slate-400">Your settings and information</p>
                         </div>
-                        <button class="w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                                onclick="logout()">
+                        <a href="{% url 'home:logout' %}" class="block w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                             <p class="text-sm font-semibold text-red-500">Logout</p>
                             <p class="text-xs text-slate-500 dark:text-slate-400">Disconnect from this website</p>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
