@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'partials/head.html' with page_title='Publier une offre d\'emploi' %}
+</head>
+<body class="bg-background-light dark:bg-background-dark transition-colors">
+    {% include 'partials/header.html' with header_variant='auth' %}
+
+    <main class="min-h-screen pt-20 pb-12">
+        <div class="max-w-4xl mx-auto px-6">
+            <!-- En-tête -->
+            <div class="mb-8">
+                <h1 class="text-4xl font-display font-bold text-slate-900 dark:text-white mb-2">
+                    Publier une offre d'emploi
+                </h1>
+                <p class="text-lg text-slate-600 dark:text-slate-300">
+                    Partagez votre opportunité avec nos candidats
+                </p>
+            </div>
+
+            <!-- Messages d'erreur/succès -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-6 p-4 rounded-lg {% if message.tags %}bg-{{ message.tags }}-50 border border-{{ message.tags }}-200 text-{{ message.tags }}-800{% else %}bg-blue-50 border border-blue-200 text-blue-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Formulaire -->
+            <form method="POST" class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 space-y-6">
+                {% csrf_token %}
+
+                <!-- Titre du poste -->
+                <div>
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                        {{ form.title.label }} <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <ul class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.title.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                        {{ form.description.label }} <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <ul class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.description.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Grille pour salaire et compétences -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Salaire -->
+                    <div>
+                        <label for="{{ form.salary.id_for_label }}" class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                            {{ form.salary.label }}
+                        </label>
+                        {{ form.salary }}
+                        {% if form.salary.errors %}
+                            <ul class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                {% for error in form.salary.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Optionnel - salaire brut annuel</p>
+                    </div>
+
+                    <!-- Offre active -->
+                    <div>
+                        <label for="{{ form.active.id_for_label }}" class="block text-sm font-semibold text-slate-900 dark:text-white mb-2 flex items-center">
+                            {{ form.active }}
+                            <span class="ml-2">{{ form.active.label }}</span>
+                        </label>
+                        {% if form.active.errors %}
+                            <ul class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                {% for error in form.active.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Cochez pour que l'offre soit visible</p>
+                    </div>
+                </div>
+
+                <!-- Compétences -->
+                <div>
+                    <label for="{{ form.skills_input.id_for_label }}" class="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                        {{ form.skills_input.label }}
+                    </label>
+                    {{ form.skills_input }}
+                    {% if form.skills_input.errors %}
+                        <ul class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.skills_input.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ form.skills_input.help_text }}</p>
+                </div>
+
+                <!-- Boutons -->
+                <div class="flex gap-4 pt-6 border-t border-slate-200 dark:border-slate-700">
+                    <button type="submit" class="flex-1 bg-primary hover:bg-sky-600 text-white font-semibold py-3 rounded-lg transition-all shadow-md hover:shadow-lg">
+                        <span class="material-icons inline mr-2">publish</span>
+                        Publier l'offre
+                    </button>
+                    <a href="{% url 'jobs:index' %}" class="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white font-semibold py-3 rounded-lg transition-all text-center">
+                        Annuler
+                    </a>
+                </div>
+            </form>
+
+            <!-- Note d'information -->
+            <div class="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <p class="text-sm text-slate-700 dark:text-slate-300">
+                    <strong>ℹ️ Note:</strong> Les offres que vous créez seront immédiatement visibles sur le job board.
+                    Vous pourrez les modifier ou les archiver à tout moment depuis votre espace entreprise.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    {% include 'partials/footer.html' %}
+
+    <script>
+        // Validation côté client avant soumission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const title = document.querySelector('#{{ form.title.id_for_label }}').value.trim();
+            const description = document.querySelector('#{{ form.description.id_for_label }}').value.trim();
+
+            if (!title || !description) {
+                e.preventDefault();
+                alert('Veuillez remplir tous les champs obligatoires (titre et description)');
+            }
+        });
+    </script>
+</body>
+</html>
+

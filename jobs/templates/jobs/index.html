@@ -10,72 +10,107 @@
 <main class="flex-grow flex flex-col items-center justify-center p-6">
     <div class="w-full max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700"
          id="feedView">
+        <!-- En-tête avec bouton de création pour les entreprises -->
         <div class="flex items-center justify-between mb-4">
             <div>
-                <h2 class="text-2xl font-bold">Your personal feed</h2>
-                <p class="text-slate-500 text-sm">Based on your interests and activity</p>
+                <h2 class="text-2xl font-bold">Offres d'emploi</h2>
+                <p class="text-slate-500 text-sm">Découvrez les meilleures opportunités</p>
             </div>
+            {% if request.user.profile.user_type == 'entreprise' %}
+            <a href="{% url 'jobs:create_offer' %}" class="bg-primary hover:bg-sky-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                <span class="material-icons">add</span>
+                Publier une offre
+            </a>
+            {% endif %}
         </div>
+
+        <!-- Affichage des offres -->
         <div class="space-y-6">
-            <div class="group bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="space-y-1">
-                        <span class="text-xs font-bold uppercase tracking-wider text-primary">Full-Time</span>
-                        <h3 class="text-2xl font-bold group-hover:text-primary transition-colors">Senior Product
-                            Designer</h3>
-                        <p class="text-slate-500 text-sm flex items-center">
-                            <span class="material-icons text-sm mr-1">location_on</span> San Francisco, CA (Remote)
-                        </p>
+            {% if offers %}
+                {% for offer in offers %}
+                <div class="group bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="space-y-1 flex-1">
+                            <span class="text-xs font-bold uppercase tracking-wider text-primary">{{ offer.company.profile.get_user_type_display }}</span>
+                            <h3 class="text-2xl font-bold group-hover:text-primary transition-colors">{{ offer.title }}</h3>
+                            <p class="text-slate-500 text-sm flex items-center">
+                                <span class="material-icons text-sm mr-1">business</span> {{ offer.company.last_name }}
+                            </p>
+                            {% if offer.salary %}
+                            <p class="text-slate-500 text-sm flex items-center mt-1">
+                                <span class="material-icons text-sm mr-1">attach_money</span>
+                                {{ offer.salary|floatformat:0 }}€ brut/an
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-100 dark:border-slate-700">
+                            <span class="material-icons text-slate-400">work</span>
+                        </div>
                     </div>
-                    <div class="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-100 dark:border-slate-700">
-                        <span class="material-icons text-slate-400">palette</span>
+
+                    <!-- Description -->
+                    <p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed line-clamp-3">
+                        {{ offer.description }}
+                    </p>
+
+                    <!-- Compétences -->
+                    {% if offer.skills %}
+                    <div class="mb-6 flex flex-wrap gap-2">
+                        {% for skill in offer.skills %}
+                        <span class="px-3 py-1 bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 text-xs font-medium rounded-full">
+                            {{ skill }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Footer -->
+                    <div class="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500">
+                                <span class="material-icons text-xs align-text-bottom">schedule</span>
+                                {{ offer.publication_date|date:"d/m/Y" }}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="mailto:{{ offer.company.email }}?subject=Candidature%20-%20{{ offer.title|urlencode }}&body=Bonjour,%0A%0AJe%20suis%20intéressé%20par%20votre%20offre%20:%0A{{ offer.title }}%0A%0ACordialement"
+                               class="px-8 py-2.5 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-all inline-flex items-center gap-2">
+                                <span class="material-icons text-sm">mail</span>
+                                Postuler
+                            </a>
+
+                            <!-- Bouton Supprimer (seulement pour le propriétaire) -->
+                            {% if request.user == offer.company %}
+                            <form method="POST" action="{% url 'jobs:delete_offer' offer.id %}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette offre ? Cette action est irréversible.');">
+                                {% csrf_token %}
+                                <button type="submit" class="px-6 py-2.5 bg-red-500/10 dark:bg-red-500/20 text-red-600 dark:text-red-400 font-bold rounded-xl hover:bg-red-500 hover:text-white transition-all inline-flex items-center gap-2">
+                                    <span class="material-icons text-sm">delete</span>
+                                    Supprimer
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-                <p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
-                </p>
-                <div class="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
-                    <div class="flex -space-x-2">
-                        <div class="w-8 h-8 rounded-full bg-sky-200 border-2 border-white dark:border-slate-900"></div>
-                        <div class="w-8 h-8 rounded-full bg-emerald-200 border-2 border-white dark:border-slate-900"></div>
-                        <div class="w-8 h-8 rounded-full bg-amber-200 border-2 border-white dark:border-slate-900"></div>
-                        <span class="pl-4 text-xs text-slate-500 self-center">12 people applied</span>
-                    </div>
-                    <button class="px-8 py-2.5 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-all">
-                        Apply
-                    </button>
+                {% endfor %}
+            {% else %}
+            <!-- Message vide -->
+            <div class="text-center py-12">
+                <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-icons text-slate-400 text-2xl">inbox</span>
                 </div>
+                <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Aucune offre disponible</h3>
+                <p class="text-slate-500 dark:text-slate-400">Revenez bientôt pour découvrir de nouvelles opportunités</p>
+
+                {% if request.user.profile.user_type == 'entreprise' %}
+                <div class="mt-6">
+                    <a href="{% url 'jobs:create_offer' %}" class="inline-block bg-primary hover:bg-sky-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
+                        Soyez le premier à publier une offre
+                    </a>
+                </div>
+                {% endif %}
             </div>
-            <div class="group bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="space-y-1">
-                        <span class="text-xs font-bold uppercase tracking-wider text-primary">Contract</span>
-                        <h3 class="text-2xl font-bold group-hover:text-primary transition-colors">Lead Frontend
-                            Developer</h3>
-                        <p class="text-slate-500 text-sm flex items-center">
-                            <span class="material-icons text-sm mr-1">location_on</span> London, UK
-                        </p>
-                    </div>
-                    <div class="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-100 dark:border-slate-700">
-                        <span class="material-icons text-slate-400">code</span>
-                    </div>
-                </div>
-                <p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                    pariatur. Excepteur sint occaecat cupidatat non proident.
-                </p>
-                <div class="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
-                    <div class="flex -space-x-2">
-                        <div class="w-8 h-8 rounded-full bg-indigo-200 border-2 border-white dark:border-slate-900"></div>
-                        <div class="w-8 h-8 rounded-full bg-rose-200 border-2 border-white dark:border-slate-900"></div>
-                        <span class="pl-4 text-xs text-slate-500 self-center">5 people applied</span>
-                    </div>
-                    <button class="px-8 py-2.5 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-all">
-                        Apply
-                    </button>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 </main>
