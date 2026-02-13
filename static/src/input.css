@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles personnalisés */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.font-display {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Animations personnalisées */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in-from-bottom {
+    from {
+        transform: translateY(2rem);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-in {
+    animation: fade-in 0.5s ease-out;
+}
+
+.fade-in {
+    animation: fade-in 0.5s ease-out;
+}
+
+.slide-in-from-bottom-8 {
+    animation: slide-in-from-bottom 0.7s ease-out;
+}
+
+/* Truncate text après 3 lignes */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
