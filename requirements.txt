@@ -28,6 +28,5 @@ userpath==1.9.2
 xlsxwriter==3.2.9
 asgiref==3.11.1
 Django==5.2.11
-Pillow==10.1.0
 sqlparse==0.5.5
 Gunicorn==25.3.0
