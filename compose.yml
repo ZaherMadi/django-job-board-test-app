@@ -5,3 +5,13 @@ services:
       - .envlocal
     ports:
       - "8000:8000"
+
+  db:
+      image: postgres:17
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: p4ssword123!
+        POSTGRES_DB: mydatabase
+
+      ports:
+        - "5432:5432"
