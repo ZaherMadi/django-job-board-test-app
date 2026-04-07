@@ -7,13 +7,19 @@
     "watch:css": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css --watch",
     "dev": "npm run watch:css"
   },
-  "keywords": ["django", "tailwind", "job-board"],
+  "keywords": [
+    "django",
+    "tailwind",
+    "job-board"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "tailwindcss": "^3.4.1",
     "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/typography": "^0.5.10"
+    "@tailwindcss/typography": "^0.5.10",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "require": "^2.4.20"
   }
 }
-
