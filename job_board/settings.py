@@ -42,10 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',  # Ajouter l'app home pour que Django trouve les templates
     'jobs',  # Ajouter l'app home pour que Django trouve les templates
+    'storages',  # Pour django-storages/Azure
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -121,17 +123,61 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static & Media files
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# Media files (User uploads - images, CVs, etc.)
-MEDIA_URL = '/media/'
+# Cible de `python manage.py collectstatic` — le script
+# `jobs/initialize_azure.py` lit ce dossier puis pousse son contenu
+# vers le conteneur `static` du Blob Storage.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 MEDIA_ROOT = BASE_DIR / 'media'
+
+AZURE_ACCOUNT_NAME = os.getenv('STORAGE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = os.getenv('STORAGE_ACCOUNT_KEY')
+AZURE_STATIC_CONTAINER = os.getenv('AZURE_STATIC_CONTAINER', 'static')
+AZURE_MEDIA_CONTAINER = os.getenv('AZURE_MEDIA_CONTAINER', 'media')
+
+# En production (DEBUG=False) et si on a bien des credentials Azure,
+# on sert les fichiers statiques et media depuis le Blob Storage.
+USE_AZURE_STORAGE = (not DEBUG) and bool(AZURE_ACCOUNT_NAME) and bool(AZURE_ACCOUNT_KEY)
+
+if USE_AZURE_STORAGE:
+    # URL publique du Blob Storage : doit donner par exemple
+    # https://<account>.blob.core.windows.net/static/dist/output.css
+    STATIC_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_STATIC_CONTAINER}/'
+    MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_MEDIA_CONTAINER}/'
+
+    # Django 5 : nouvelle API STORAGES.
+    # - `default` (media) : Azure pour stocker directement les uploads
+    #   utilisateurs (CV, photos de profil…)
+    # - `staticfiles`     : on reste sur le filesystem local pour que
+    #   `collectstatic` peuple `STATIC_ROOT`, puis `initialize_azure.py`
+    #   se charge de l'upload vers le conteneur `static`.
+    STORAGES = {
+        'default': {
+            'BACKEND': 'jobs.custom_azure.AzureMediaStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
+else:
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
