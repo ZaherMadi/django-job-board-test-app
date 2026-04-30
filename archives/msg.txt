@@ -1,0 +1,1 @@
+Pour l'erreur du logo , j'aurais pu également changer dans le code l'url pour static/LogoWP et mettre le logo à cette endroit mais ce n'etait pas l'objectif de base donc je n'ai pas perdu plus de temps.
