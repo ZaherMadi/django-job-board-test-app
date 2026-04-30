@@ -88,6 +88,11 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        'OPTIONS': {
+            # Neon (et la plupart des Postgres managés) exigent SSL.
+            # En local/Docker compose, mettre POSTGRES_SSLMODE=prefer ou disable.
+            'sslmode': os.getenv('POSTGRES_SSLMODE', 'prefer'),
+        },
     }
 }
 

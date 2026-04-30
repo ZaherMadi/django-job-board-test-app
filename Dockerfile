@@ -25,8 +25,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+RUN pip install --upgrade pip
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir --retries 5 --timeout 120 -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
