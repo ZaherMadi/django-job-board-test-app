@@ -217,3 +217,9 @@ yarn-debug.log*
 yarn-error.log*
 # Tailwind CSS build output
 static/dist/output.css
+
+# Django collectstatic output (re-généré au démarrage du conteneur)
+staticfiles/
+
+# Claude Code local data
+.claude/
